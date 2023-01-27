@@ -2,14 +2,16 @@ import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { addNewPost, postAdded } from "./postsSlice";
 import { selectAllUsers } from "../users/usersSlice";
+import { Navigate, useNavigate } from "react-router-dom";
 
 const PostAddFrom = () => {
   const dispatch = useDispatch();
+  const navigate = useNavigate();
 
   const [title, setTitle] = useState("");
   const [content, setContent] = useState("");
   const [userId, setUserId] = useState("");
-  const [AddRequestStatus, setAddRequestStatus] = useState("idle");
+  const [addRequestStatus, setAddRequestStatus] = useState("idle");
 
   const users = useSelector(selectAllUsers);
 
@@ -18,7 +20,7 @@ const PostAddFrom = () => {
   const onAuthorChange = (e) => setUserId(e.target.value);
 
   const canSave =
-    [title, content, userId].every(Boolean) && AddRequestStatus === "idle";
+    [title, content, userId].every(Boolean) && addRequestStatus === "idle";
 
   const onSavePostClicked = () => {
     if (canSave) {
@@ -28,6 +30,7 @@ const PostAddFrom = () => {
         setTitle("");
         setContent("");
         setUserId("");
+        navigate("/");
       } catch (error) {
         console.log("Failed to Save Post", error);
       } finally {
@@ -56,7 +59,7 @@ const PostAddFrom = () => {
         />
         <label htmlFor="postAuthor">Post Author:</label>
         <select onChange={onAuthorChange} value={userId}>
-          <option></option>
+          <option value=""></option>
           {AuthorsOption}
         </select>
         <label htmlFor="postContent">Post Content:</label>
